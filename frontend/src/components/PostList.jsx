@@ -37,7 +37,7 @@ const posts = [
 ];
 
 function PostList() {
-  const [postContent, setPostContent] = useState("")
+  const [topPosts, setTopPosts] = useState([])
 
   useEffect(() => {
     fetch('/post').then(response => {

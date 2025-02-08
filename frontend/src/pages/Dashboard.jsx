@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import NewPostButton from '../components/NewPostButton';
 import SearchBar from '../components/SearchBar';
 import PostList from '../components/PostList';
