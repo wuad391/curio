@@ -142,6 +142,32 @@ def message_board():
         return jsonify({"messages": messages, "form": form})
 
 
+@app.route("/post_message", methods=["POST"])
+def post_message():
+    if "user" not in session:
+        flash("Please log in first", "warning")
+        return jsonify(
+            {
+                "message": "Please log in first",
+                "status": "danger",
+            }
+        )
+    with app.app_context():
+        new_message = Post(
+            username=session["user"],
+            user_role=session["role"],
+            content=request.form["message"],
+        )
+        db.session.add(new_message)
+        db.session.commit()
+        return jsonify(
+            {
+                "message": "Message posted successfully!",
+                "status": "success",
+            }
+        )
+
+
 @app.route("/message/<int:message_id>", methods=["GET", "POST"])
 def view_message(message_id):
     with app.app_context():
