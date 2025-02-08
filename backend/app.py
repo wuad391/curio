@@ -304,7 +304,7 @@ def main():
         db.session.add(user)
         db.session.add(post)
         db.session.commit()
-    print(get_top().json)
+    print(get_top())
 
     app.run(debug=True)
 
