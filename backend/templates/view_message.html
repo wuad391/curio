@@ -14,7 +14,23 @@
     {% if message.comments %}
         <ul>
             {% for comment in message.comments %}
-                <li><strong>{{ comment.user }} <span class="{{ comment.user_role }}">{{ comment.user_role }}</span>:</strong> {{ comment.content }}</li>
+                {% with comment=comment, comment_form=comment_form %}
+                <li>
+                    <strong>{{ comment.user }} <span class="{{ comment.user_role }}">{{ comment.user_role }}</span>:</strong> {{ comment.content }}
+                    <form method="POST" action="{{ url_for('reply_comment', comment_id=comment.id) }}">
+                        {{ comment_form.hidden_tag() }}
+                        <p>{{ comment_form.comment.label }} {{ comment_form.comment() }}</p>
+                        <p>{{ comment_form.submit() }}</p>
+                    </form>
+                    {% if comment.subcomments %}
+                        <ul style="margin-left: 20px;">
+                            {% for subcomment in comment.subcomments %}
+                                {% include 'comment.html' %}
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </li>
+                {% endwith %}
             {% endfor %}
         </ul>
     {% else %}
