@@ -1,4 +1,21 @@
 from roles import UserRoles
+from sql_classes import User, Post, Comment, db
+from sqlalchemy.orm import validates
+
+
+class Ranking(db.Model):
+    # Ranking is for a post OR comment
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=True)
+    comment_id = db.Column(db.Integer, db.ForeignKey("comment.id"), nullable=True)
+    ranking = db.Column(db.Integer, nullable=False)
+
+    @validates("ranking")
+    def validate_ranking(self, key, ranking):
+        if ranking not in [-1, 0, 1, 2, 3]:
+            raise ValueError("Invalid ranking")
+        return ranking
 
 
 def derived_post_score(post):
