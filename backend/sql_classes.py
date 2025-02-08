@@ -18,6 +18,9 @@ class User(db.Model):
     password = db.Column(db.String(150), nullable=False)
     role = db.Column(db.Enum(UserRoles), nullable=False)
 
+    def serialize(self):
+        return {"username": self.username, "role": self.role}
+
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -31,6 +34,20 @@ class Post(db.Model):
     visibility = db.Column(db.Float, default=0)
     timestamp = db.Column(db.DateTime, nullable=False)
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "content": self.content,
+            "comments": [comment.serialize() for comment in self.comments],
+            "title": self.title,
+            "pinned": self.pinned,
+            "instructor_endorsed": self.instructor_endorsed,
+            "rank": self.rank,
+            "visibility": self.visibility,
+            "timestamp": self.timestamp,
+        }
+
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -42,6 +59,19 @@ class Comment(db.Model):
     rank = db.Column(db.Float, default=0)
     visibility = db.Column(db.Float, default=0)
     timestamp = db.Column(db.DateTime, nullable=False)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "content": self.content,
+            "post_id": self.post_id,
+            "instructor_endorsed": self.instructor_endorsed,
+            "accepted": self.accepted,
+            "rank": self.rank,
+            "visibility": self.visibility,
+            "timestamp": self.timestamp,
+        }
 
 
 # InstructorClassAssociation_table = db.Table(
