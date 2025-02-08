@@ -45,7 +45,7 @@ class Post(db.Model):
             "instructor_endorsed": self.instructor_endorsed,
             "rank": self.rank,
             "visibility": self.visibility,
-            "timestamp": self.timestamp,
+            "timestamp": str(self.timestamp),
         }
 
 
@@ -70,7 +70,7 @@ class Comment(db.Model):
             "accepted": self.accepted,
             "rank": self.rank,
             "visibility": self.visibility,
-            "timestamp": self.timestamp,
+            "timestamp": str(self.timestamp),
         }
 
 
