@@ -1,8 +1,17 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function NewPostButton() {
+  const navigate = useNavigate();
+
+  function handleClick(event) {
+    navigate('/newpost');
+  }
+
   return (
-    <button className="flex flex-col justify-center items-center p-4 text-base font-extrabold tracking-normal leading-none text-white bg-blue-400 rounded-2xl min-h-[56px]">
+    <button
+     className="flex flex-col justify-center items-center p-4 text-base font-extrabold tracking-normal leading-none text-white bg-blue-400 rounded-2xl min-h-[56px]"
+     onSubmit={handleClick}>
       <div className="flex gap-3 max-w-full w-[116px]">
         <img
           loading="lazy"
