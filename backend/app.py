@@ -13,12 +13,7 @@ from wtforms import StringField, PasswordField, SubmitField, TextAreaField, Sele
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 import secrets
-
-app = Flask(__name__)
-
-app.secret_key = secrets.token_urlsafe(16)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///messages.db"
-db = SQLAlchemy(app)
+from sql_classes import app, db, User, Post, Comment
 
 
 
@@ -43,13 +38,6 @@ class CommentForm(FlaskForm):
     submit = SubmitField("Post Comment")
 
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(150), nullable=False)
-    role = db.Column(db.String(50), nullable=False)
-
-
 class RegistrationForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
@@ -59,22 +47,6 @@ class RegistrationForm(FlaskForm):
         validators=[DataRequired()],
     )
     submit = SubmitField("Register")
-
-
-class Message(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(150), nullable=False)
-    user_role = db.Column(db.String(50), nullable=False)
-    content = db.Column(db.Text, nullable=False)
-    comments = db.relationship("Comment", backref="message", lazy=True)
-
-
-class Comment(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user = db.Column(db.String(150), nullable=False)
-    user_role = db.Column(db.String(50), nullable=False)
-    content = db.Column(db.Text, nullable=False)
-    message_id = db.Column(db.Integer, db.ForeignKey("message.id"), nullable=False)
 
 
 # Ensure database tables are created before the first request
@@ -118,7 +90,7 @@ def message_board():
 
     form = MessageForm()
     if form.validate_on_submit():
-        new_message = Message(
+        new_message = Post(
             username=session["user"],
             user_role=session["role"],
             content=form.message.data,
@@ -127,7 +99,7 @@ def message_board():
         db.session.commit()
         return redirect(url_for("message_board"))
 
-    messages = Message.query.all()
+    messages = Post.query.all()
     return render_template(
         "message_board.html", username=session["user"], form=form, messages=messages
     )
@@ -138,7 +110,7 @@ def view_message(message_id):
     if "user" not in session:
         flash("Please log in first", "warning")
         return redirect(url_for("login"))
-    message = Message.query.get_or_404(message_id)
+    message = Post.query.get_or_404(message_id)
     comment_form = CommentForm()
 
     if comment_form.validate_on_submit():
