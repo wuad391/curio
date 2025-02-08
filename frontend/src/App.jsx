@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Home, MessageSquare, Search, Star, Book, Plus, MessageCircle } from "lucide-react";
 import { BrowserRouter, Routes, Route} from 'react-router-dom';
 import Dashboard from './pages/Dashboard.jsx';
+import NewPost from './pages/NewPost.jsx';
 
 
 // side navigation bar
