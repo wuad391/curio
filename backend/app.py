@@ -12,6 +12,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, TextAreaField, SelectField
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 import secrets
 from sql_classes import app, db, User, Post, Comment
 from roles import UserRoles
@@ -203,7 +204,8 @@ def endorse_comment(comment_id):
 @app.route("/get_top")
 def get_top():
     top_posts = Post.query.order_by(Post.visibility.desc()).all()
-    return jsonify(top_posts)
+    posts_serialized = [post.title for post in top_posts]
+    return jsonify(posts_serialized)
 
 
 @app.route("/get_recent")
@@ -222,8 +224,15 @@ def logout():
 
 def main():
     with app.app_context():
+        db.drop_all()
         db.create_all()
+        user=User(id=0,username="user1",password="pw",role=UserRoles.STUDENT)
+        post=Post(user_id=user.id,title="title",content="content",timestamp=datetime.now())
+        db.session.add(user)
+        db.session.add(post)
+        db.session.commit()
     app.run(debug=True)
+    print({post: post.__dict__ for post in db.session.query(Post).all()})
 
 
 if __name__ == "__main__":

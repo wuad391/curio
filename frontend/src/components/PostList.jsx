@@ -38,24 +38,35 @@ const posts = [
 
 function PostList() {
   const [topPosts, setTopPosts] = useState([])
-
   useEffect(() => {
-    fetch('/post').then(response => {
-      if (response.ok) {
-        return response.json()
-      }
-    }).then(data => console.log(data))
-  },[])
+    fetch('/get_top')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        console.l
+        return response.json();
+      })
+      .then(data => setTopPosts(data))
+      // .catch(error => console.error('Error fetching posts:', error));
+  }, []);
 
-
+  console.log(topPosts.length)
   return (
     <div className="flex flex-col px-5 pt-5 pb-16 mt-6 bg-white rounded-2xl shadow-[0px_1px_4px_rgba(0,0,0,0.25)] text-zinc-700 max-md:max-w-full">
       <div className="self-start text-lg font-bold tracking-normal leading-none">
         Recent posts
       </div>
-      {posts.map((post, index) => (
+      {/* {posts.map((post, index) => (
         <Post key={index} {...post} />
-      ))}
+      ))} */}
+      {topPosts.length > 0 ? (
+        topPosts.map(post => (
+          <Post key={post.id} {...post} />
+        ))
+      ) : (
+        <p>No posts available.</p>
+      )}
     </div>
   );
 }
