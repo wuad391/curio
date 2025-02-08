@@ -4,8 +4,18 @@ from wtforms import StringField, PasswordField, SubmitField, TextAreaField, Sele
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 import secrets
-from sql_classes import app, db, User, Message, Comment
+from sql_classes import app, db, Student, Message, Comment
 
+
+class RegistrationForm(FlaskForm):
+    username = StringField("Username", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired()])
+    role = SelectField(
+        "Role",
+        choices=[("student", "Student"), ("instructor", "Instructor"), ("ta", "TA"), ("admin", "Admin")],
+        validators=[DataRequired()],
+    )
+    submit = SubmitField("Register")
 
 
 class LoginForm(FlaskForm):
@@ -13,7 +23,7 @@ class LoginForm(FlaskForm):
     password = PasswordField("Password", validators=[DataRequired()])
     role = SelectField(
         "Role",
-        choices=[("student", "Student"), ("instructor", "Instructor")],
+        choices=[("student", "Student"), ("instructor", "Instructor"), ("ta", "TA"), ("admin", "Admin")],
         validators=[DataRequired()],
     )
     submit = SubmitField("Login")
@@ -29,17 +39,6 @@ class CommentForm(FlaskForm):
     submit = SubmitField("Post Comment")
 
 
-class RegistrationForm(FlaskForm):
-    username = StringField("Username", validators=[DataRequired()])
-    password = PasswordField("Password", validators=[DataRequired()])
-    role = SelectField(
-        "Role",
-        choices=[("student", "Student"), ("instructor", "Instructor")],
-        validators=[DataRequired()],
-    )
-    submit = SubmitField("Register")
-
-
 # Ensure database tables are created before the first request
 with app.app_context():
     db.create_all()
@@ -50,14 +49,23 @@ with app.app_context():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user and user.password == form.password.data and user.role == form.role.data:
-            session["user"] = user.username
-            session["role"] = user.role
-            flash("Login successful!", "success")
-            return redirect(url_for("message_board"))
+        if form.role.data == "student":
+            user = Student.query.filter_by(username=form.username.data).first()
+            if user and user.password == form.password.data:
+                session["user"] = user.username
+                session["role"] = "student"
+                flash("Login successful!", "success")
+            else:
+                flash("Invalid username/password/role", "danger")
         else:
-            flash("Invalid username/password/role", "danger")
+            user = Instructor.query.filter_by(username=form.username.data).first()
+            if user and user.password == form.password.data and user.role == form.role.data:
+                session["user"] = user.username
+                session["role"] = user.role
+                flash("Login successful!", "success")
+            else:
+                flash("Invalid username/password/role", "danger")
+        return redirect(url_for("message_board"))
     return render_template("login.html", form=form)
 
 
@@ -65,7 +73,7 @@ def login():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        new_user = User(username=form.username.data, password=form.password.data, role=form.role.data)
+        new_user = Student(username=form.username.data, password=form.password.data, role=form.role.data)
         db.session.add(new_user)
         db.session.commit()
         flash("Registration successful! Please log in.", "success")
