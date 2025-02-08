@@ -128,7 +128,13 @@ def message_board():
         )
         db.session.add(new_message)
         db.session.commit()
-        return redirect(url_for("message_board"))
+        return jsonify(
+            {
+                "message": "Comment posted successfully!",
+                "form": form,
+                "status": "success",
+            }
+        )
 
     messages = Post.query.all()
     return jsonify({"messages": messages, "form": form})
@@ -196,7 +202,6 @@ def main():
     with app.app_context():
         db.create_all()
     app.run(debug=True)
-    # Ensure database tables are created before the first request
 
 
 if __name__ == "__main__":
