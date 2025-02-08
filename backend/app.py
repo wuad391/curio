@@ -16,6 +16,7 @@ users = {
     "user": {"password": "user", "role": "student"},
 }
 
+
 class LoginForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
@@ -139,7 +140,7 @@ def logout():
 
 @app.route("/test")
 def test():
-    return {"message": "Hello, World!"}
+    return {"message": "AAAAAAAAAAAAAAAHHHHHHHHHHHH"}
 
 
 if __name__ == "__main__":
