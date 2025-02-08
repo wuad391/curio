@@ -29,20 +29,6 @@ function UserPosts() {
       <div className="self-start mt-3.5 text-xs font-semibold tracking-normal leading-loose text-zinc-700">
         Your Posts
       </div>
-      {userPosts.map((post, index) => (
-        <div key={index} className={`flex gap-2 px-2.5 py-4 mt-${index === 0 ? '2' : '3'} text-xs font-bold leading-4 rounded-2xl border-2 border-solid ${post.isActive ? 'bg-blue-100 bg-opacity-30' : 'bg-slate-50'} border-neutral-300 border-opacity-40 text-zinc-700 max-md:mr-1.5`}>
-          {post.icon && (
-            <img
-              loading="lazy"
-              src={post.icon}
-              className="object-contain shrink-0 my-auto w-5 aspect-square"
-              alt=""
-            />
-          )}
-          {!post.icon && <div className="flex shrink-0 self-start h-[26px] w-[21px]" />}
-          <div>{post.title}</div>
-        </div>
-      ))}
     </>
   );
 }

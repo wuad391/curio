@@ -27,7 +27,7 @@ function NewPost() {
       </section>
       
       {/* User Profile Section */}
-      <aside className="w-[20%] max-md:w-full pt-5 mr-5">
+      <aside className="w-[20%] max-md:w-full pt-5">
         <div className="w-full flex justify-center">
           <UserProfile />
         </div>
