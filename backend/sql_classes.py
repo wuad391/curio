@@ -24,6 +24,10 @@ class Post(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     content = db.Column(db.Text, nullable=False)
     comments = db.relationship("Comment", backref="post", lazy=True)
+    title = db.Column(db.String(150), nullable=False)
+    pinned = db.Column(db.Boolean, default=False)
+    instructor_endorsed = db.Column(db.Boolean, default=False)
+    avg_stars = db.Column(db.Float, default=0)
 
 
 class Comment(db.Model):
@@ -33,6 +37,7 @@ class Comment(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False)
     instructor_endorsed = db.Column(db.Boolean, default=False)
     accepted = db.Column(db.Boolean, default=False)
+    avg_stars = db.Column(db.Float, default=0)
 
 
 # InstructorClassAssociation_table = db.Table(
