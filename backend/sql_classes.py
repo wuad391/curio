@@ -28,6 +28,7 @@ class Post(db.Model):
     pinned = db.Column(db.Boolean, default=False)
     instructor_endorsed = db.Column(db.Boolean, default=False)
     rank = db.Column(db.Float, default=0)
+    visibility = db.Column(db.Float, default=0)
 
 
 class Comment(db.Model):
@@ -38,6 +39,7 @@ class Comment(db.Model):
     instructor_endorsed = db.Column(db.Boolean, default=False)
     accepted = db.Column(db.Boolean, default=False)
     rank = db.Column(db.Float, default=0)
+    visibility = db.Column(db.Float, default=0)
 
 
 # InstructorClassAssociation_table = db.Table(
