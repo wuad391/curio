@@ -154,9 +154,8 @@ def post_message():
         )
     with app.app_context():
         new_message = Post(
-            username=session["user"],
-            user_role=session["role"],
-            content=request.form["message"],
+            content=request.form["content"],
+            title=request.form["title"]
         )
         print(new_message.serialize())
         db.session.add(new_message)
@@ -320,7 +319,7 @@ def test():
 
 
 # recieve a post request with a json object containg strings
-@app.route("/r_test", methods=["POST"])
+@app.route("/r_test")
 def r_test():
     data = request.get_json()
     print(data)
