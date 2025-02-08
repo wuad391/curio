@@ -30,5 +30,6 @@ class Comment(db.Model):
     user = db.Column(db.String(150), nullable=False)
     user_role = db.Column(db.String(50), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    message_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False)
-
+    post_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False)
+    instructor_endorsed = db.Column(db.Boolean, default=False)
+    accepted = db.Column(db.Boolean, default=False)
