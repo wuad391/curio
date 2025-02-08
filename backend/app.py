@@ -62,14 +62,9 @@ class CommentForm(FlaskForm):
 
 
 @app.route("/", methods=["GET", "POST"])
-
 @app.route("/test", methods=["GET", "POST"])
 def pull_usernames():
     return db.session.query(User).all()
-
-
-
-
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -273,15 +268,17 @@ def accept_comment(comment_id):
 
 @app.route("/get_top")
 def get_top():
-    top_posts = Post.query.order_by(Post.visibility.desc()).all()
-    posts_serialized = [post.title for post in top_posts]
-    return jsonify(posts_serialized)
+    with app.app_context():
+        top_posts = Post.query.order_by(Post.visibility.desc()).all()
+        posts_serialized = [post.title for post in top_posts]
+        return jsonify(posts_serialized)
 
 
 @app.route("/get_recent")
 def get_recent():
-    recent_posts = Post.query.order_by(Post.timestamp.desc()).all()
-    return jsonify(recent_posts)
+    with app.app_context():
+        recent_posts = Post.query.order_by(Post.timestamp.desc()).all()
+        return jsonify(recent_posts)
 
 
 @app.route("/logout")
@@ -296,13 +293,16 @@ def main():
     with app.app_context():
         db.drop_all()
         db.create_all()
-        user=User(id=0,username="user1",password="pw",role=UserRoles.STUDENT)
-        post=Post(user_id=user.id,title="title",content="content",timestamp=datetime.now())
+        user = User(id=0, username="user1", password="pw", role=UserRoles.STUDENT)
+        post = Post(
+            user_id=user.id, title="title", content="content", timestamp=datetime.now()
+        )
         db.session.add(user)
         db.session.add(post)
         db.session.commit()
+        print({post: post.__dict__ for post in db.session.query(Post).all()})
+    print(get_top())
     app.run(debug=True)
-    print({post: post.__dict__ for post in db.session.query(Post).all()})
 
 
 if __name__ == "__main__":
