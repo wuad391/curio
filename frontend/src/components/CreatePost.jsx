@@ -5,30 +5,30 @@ function CreatePost() {
   const [selectedClass, setSelectedClass] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [selectedTags, setSelectedTags] = useState([]);
-  const [availableTags, setAvailableTags] = useState([]);
-  const [showTagDropdown, setShowTagDropdown] = useState(false);
+  // const [selectedTags, setSelectedTags] = useState([]);
+  // const [availableTags, setAvailableTags] = useState([]);
+  // const [showTagDropdown, setShowTagDropdown] = useState(false);
 
   // Fetch available tags from your Flask backend (SQLAlchemy)
-  useEffect(() => {
-    fetch('/api/tags')
-      .then(response => response.json())
-      .then(data => setAvailableTags(data))
-      .catch(error => console.error('Error fetching tags:', error));
-  }, []);
+  // useEffect(() => {
+  //   fetch('/api/tags')
+  //     .then(response => response.json())
+  //     .then(data => setAvailableTags(data))
+  //     .catch(error => console.error('Error fetching tags:', error));
+  // }, []);
 
   // Handle adding a tag from the dropdown
-  const handleAddTag = (e) => {
-    const tagName = e.target.value;
-    if (tagName && !selectedTags.includes(tagName)) {
-      setSelectedTags([...selectedTags, tagName]);
-    }
-  };
+  // const handleAddTag = (e) => {
+  //   const tagName = e.target.value;
+  //   if (tagName && !selectedTags.includes(tagName)) {
+  //     setSelectedTags([...selectedTags, tagName]);
+  //   }
+  // };
 
-  // Toggle the visibility of the tag dropdown
-  const toggleTagDropdown = () => {
-    setShowTagDropdown(!showTagDropdown);
-  };
+  // // Toggle the visibility of the tag dropdown
+  // const toggleTagDropdown = () => {
+  //   setShowTagDropdown(!showTagDropdown);
+  // };
 
   // Handle form submission: send data to your Flask backend
   const handleSubmit = (e) => {
@@ -45,19 +45,19 @@ function CreatePost() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(postData),
     }).then(response => {
-        if (response.ok) {
-          console.log('Post created successfully!');
-          // Optionally reset the form or show a success message here.
-        } else {
-          console.error('Failed to create post.');
-        }
-      })
+      if (response.ok) {
+        console.log('Post created successfully!');
+        // Optionally reset the form or show a success message here.
+      } else {
+        console.error('Failed to create post.');
+      }
+    })
       .catch(error => console.error('Error:', error));
   };
 
   const getLatestPosts = () => {
     fetch('/posts').then(response => {
-      if (response.ok){
+      if (response.ok) {
         return response.json()
       }
     }).then(data => setContent(data))
