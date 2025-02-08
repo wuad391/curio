@@ -158,8 +158,10 @@ def post_message():
             user_role=session["role"],
             content=request.form["message"],
         )
+        print(new_message.serialize())
         db.session.add(new_message)
         db.session.commit()
+        
         return jsonify(
             {
                 "message": "Message posted successfully!",

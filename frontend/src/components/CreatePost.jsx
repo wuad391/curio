@@ -71,15 +71,20 @@ function CreatePost() {
   }
   
   function handleSubmit() {
-    fetch ("http://127.0.0.1:5000/message_board", {
+    fetch ("http://127.0.0.1:5000/post_message", {
       method: "POST",
       mode: "no-cors",
-      body: JSON.stringify(jsonData)
-    })
+      body: "JSON.stringify(jsonData)"
+    }).then((res) =>
+      res.json().then((data) => {
+          // Setting a data from api
+        console.log(data);
+      })
+  );
     console.log("I DID IT")
   }
 
-  function onClick() {
+  function handleClick() {
     var formData = new FormData();
   }
 
