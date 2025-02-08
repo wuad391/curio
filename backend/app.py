@@ -102,7 +102,7 @@ def create_post():
         new_post = Post(
             content=data["class"],
             title=data["title"],
-            user_id=0,
+            user_id=124114,
             timestamp=datetime.now(),
         )
         db.session.add(new_post)
