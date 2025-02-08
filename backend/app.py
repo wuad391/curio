@@ -1,4 +1,13 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    flash,
+    session,
+    jsonify,
+)
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, TextAreaField, SelectField
 from wtforms.validators import DataRequired
@@ -140,7 +149,7 @@ def logout():
 
 @app.route("/test")
 def test():
-    return {"message": "AAAAAAAAAAAAAAAHHHHHHHHHHHH"}
+    return jsonify("SLDJFHLSDJFLKSDJFLKSDJFL")
 
 
 if __name__ == "__main__":
