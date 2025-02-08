@@ -35,17 +35,16 @@ function CreatePost() {
     e.preventDefault();
     const postData = {
       class: selectedClass,
-      title,
-      content,
-      tags: selectedTags,
+      title: title,
+      content: content,
+      rank: 0
     };
 
-    fetch('/api/posts', {
+    fetch('/posts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(postData),
-    })
-      .then(response => {
+    }).then(response => {
         if (response.ok) {
           console.log('Post created successfully!');
           // Optionally reset the form or show a success message here.
@@ -55,6 +54,15 @@ function CreatePost() {
       })
       .catch(error => console.error('Error:', error));
   };
+
+  const getLatestPosts = () => {
+    fetch('/posts').then(response => {
+      if (response.ok){
+        return response.json()
+      }
+    }).then(data => setContent(data))
+  }
+
 
   return (
     <div className="flex flex-col px-5 pt-5 pb-16 mt-6 bg-white rounded-2xl shadow-[0px_1px_4px_rgba(0,0,0,0.25)] text-zinc-700 max-md:max-w-full">

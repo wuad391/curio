@@ -26,7 +26,7 @@ function Post({ title, course, content, stars, icon, isActive }) {
           {content}
         </div>
         <div className="text-sm font-bold leading-none text-right">
-          {stars}
+          {rank}
         </div>
         <img
           loading="lazy"
