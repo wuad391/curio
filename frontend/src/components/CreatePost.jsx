@@ -65,33 +65,46 @@ function CreatePost() {
   //   }).then(data => setContent(data))
   // }
 
-  var jsonData = {
-    "content": "TEST TEST TEST", 
-    "title": "SLFKSDLKJFK"
-  }
-  
-  function handleSubmit() {
-    fetch ("http://127.0.0.1:5000/post_message", {
-      method: "POST",
-      mode: "no-cors",
-      body: "JSON.stringify(jsonData)"
-    }).then((res) =>
-      res.json().then((data) => {
-          // Setting a data from api
-        console.log(data);
-      })
-  );
-    console.log("I DID IT")
-  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  function handleClick() {
-    var formData = new FormData();
-  }
+    // Gather the data from the form inputs
+    const postData = {
+      class: selectedClass,
+      title: title,
+      content: content,
+      rank: 0  // Include rank if needed
+    };
+
+    // Send the data to the Flask backend
+    fetch("http://127.0.0.1:5000/post_message", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(postData)
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Failed to create post.");
+        }
+      })
+      .then(data => {
+        console.log("Post created successfully!", data);
+        // Optionally, reset the form fields or show a success message here.
+      })
+      .catch(error => {
+        console.error("Error:", error);
+      });
+  };
+
 
   return (
     <div className="flex flex-col px-5 pt-5 pb-16 mt-6 bg-white rounded-2xl shadow-[0px_1px_4px_rgba(0,0,0,0.25)] text-zinc-700 max-md:max-w-full">
       <h2 className="text-3xl font-bold mb-6">Create Post</h2>
-      <form onSubmit={handleSubmit()} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6">
         {/* Select Class Dropdown */}
         <div>
           <label htmlFor="class" className="block text-sm font-medium text-gray-700">
