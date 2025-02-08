@@ -173,7 +173,7 @@ const RecentPosts = () => {
 
 // MAIN APP
 const App = () => {
-  const [test, setTest] = useState();
+  const [test, setTest] = useState("");
 
   useEffect(() =>{
     const fetchData = async() => {
@@ -183,6 +183,8 @@ const App = () => {
         setTest(data);
       }
     };
+
+    fetchData();
   }, []);
   
   return (
