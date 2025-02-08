@@ -74,7 +74,7 @@ function CreatePost() {
     fetch ("http://127.0.0.1:5000/r_test", {
       method: "POST",
       mode: "no-cors",
-      body: JSON.stringify({cool": "hot"})
+      body: JSON.stringify({"cool": "hot"})
     });
     console.log("I DID IT")
   }
