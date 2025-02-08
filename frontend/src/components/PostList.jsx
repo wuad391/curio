@@ -44,7 +44,7 @@ function PostList() {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        console.l
+        console.log("made it here")
         return response.json();
       })
       .then(data => setTopPosts(data))

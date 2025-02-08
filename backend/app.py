@@ -270,7 +270,7 @@ def accept_comment(comment_id):
 def get_top():
     with app.app_context():
         top_posts = Post.query.order_by(Post.visibility.desc()).all()
-        posts_serialized = [post.title for post in top_posts]
+        posts_serialized = [post.__dict__ for post in top_posts]
         return jsonify(posts_serialized)
 
 
