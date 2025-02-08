@@ -173,11 +173,23 @@ const RecentPosts = () => {
 
 // MAIN APP
 const App = () => {
+  const [test, setTest] = useState();
+
+  useEffect(() =>{
+    const fetchData = async() => {
+      const res = await fetch("/");
+      const data = await res.json();
+      if (data) {
+        setTest(data);
+      }
+    };
+  }, []);
+  
   return (
     <div className="flex h-screen">
       {/* Side Navigation */}
       <SideNav />
-
+      <div>{ message }</div>
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col">
         {/* Search Bar at the Top */}
