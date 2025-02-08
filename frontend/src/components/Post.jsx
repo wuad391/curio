@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Post({ title, course, content, stars, icon, isActive }) {
+function Post({ title, course, content, rank, icon, isActive }) {
   const baseClasses = "flex flex-col px-4 pt-4 pb-8 mt-5 w-full rounded-2xl border-2 border-solid border-neutral-300 border-opacity-40 max-md:max-w-full";
   const activeClasses = "bg-blue-100 bg-opacity-30";
   const inactiveClasses = "bg-neutral-200 bg-opacity-50";
