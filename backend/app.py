@@ -7,14 +7,10 @@ import secrets
 
 app = Flask(__name__)
 
-app.secret_key = secrets.token_urlsafe(16)  # Change this to a strong secret key
+app.secret_key = secrets.token_urlsafe(16)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///messages.db"
 db = SQLAlchemy(app)
 
-users = {
-    "admin": {"password": "admin", "role": "instructor"},
-    "user": {"password": "user", "role": "student"},
-}
 
 class LoginForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired()])
@@ -35,6 +31,24 @@ class MessageForm(FlaskForm):
 class CommentForm(FlaskForm):
     comment = TextAreaField("Comment", validators=[DataRequired()])
     submit = SubmitField("Post Comment")
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(150), unique=True, nullable=False)
+    password = db.Column(db.String(150), nullable=False)
+    role = db.Column(db.String(50), nullable=False)
+
+
+class RegistrationForm(FlaskForm):
+    username = StringField("Username", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired()])
+    role = SelectField(
+        "Role",
+        choices=[("student", "Student"), ("instructor", "Instructor")],
+        validators=[DataRequired()],
+    )
+    submit = SubmitField("Register")
 
 
 class Message(db.Model):
@@ -63,23 +77,27 @@ with app.app_context():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        username = form.username.data
-        password = form.password.data
-        role = form.role.data
-
-        if (
-            username in users
-            and users[username]["password"] == password
-            and users[username]["role"] == role
-        ):
-            session["user"] = username
-            session["role"] = users[username]["role"]
+        user = User.query.filter_by(username=form.username.data).first()
+        if user and user.password == form.password.data and user.role == form.role.data:
+            session["user"] = user.username
+            session["role"] = user.role
             flash("Login successful!", "success")
             return redirect(url_for("message_board"))
         else:
             flash("Invalid username/password/role", "danger")
-
     return render_template("login.html", form=form)
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        new_user = User(username=form.username.data, password=form.password.data, role=form.role.data)
+        db.session.add(new_user)
+        db.session.commit()
+        flash("Registration successful! Please log in.", "success")
+        return redirect(url_for("login"))
+    return render_template("register.html", form=form)
 
 
 @app.route("/message_board", methods=["GET", "POST"])
