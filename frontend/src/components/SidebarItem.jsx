@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 
 function SidebarItem({ text, icon, isActive }) {
   const navigate = useNavigate();
-  const baseClasses = "flex overflow-hidden gap-3 w-full text-sm font-medium tracking-normal leading-5 whitespace-nowrap min-h-[56px] rounded-[100px] text-zinc-700";
-  const activeClasses = "bg-slate-50 font-semibold";
+  const baseClasses = "flex overflow-hidden gap-3 w-full text-sm font-medium hover:bg-slate-100 tracking-normal leading-5 whitespace-nowrap min-h-[56px] rounded-[100px] text-zinc-700";
+  const activeClasses = "bg-slate-200 font-semibold";
 
   const handleClick = () => {
     // this sucks because in the future, a custom label called dashboard would cause major issues
@@ -28,7 +28,7 @@ function SidebarItem({ text, icon, isActive }) {
             alt=""
           />
         )}
-        {/* The text container is now forced to be left-aligned with added padding */}
+        
         <div className="flex-1 pl-2 text-left">
           {text}
         </div>
