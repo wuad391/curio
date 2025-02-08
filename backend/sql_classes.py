@@ -41,3 +41,4 @@ class Comment(db.Model):
     user_role = db.Column(db.String(50), nullable=False)
     content = db.Column(db.Text, nullable=False)
     message_id = db.Column(db.Integer, db.ForeignKey("message.id"), nullable=False)
+
