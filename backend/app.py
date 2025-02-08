@@ -193,10 +193,10 @@ def logout():
 
 
 def main():
-    app.run(debug=True)
-    # Ensure database tables are created before the first request
     with app.app_context():
         db.create_all()
+    app.run(debug=True)
+    # Ensure database tables are created before the first request
 
 
 if __name__ == "__main__":

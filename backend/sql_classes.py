@@ -4,7 +4,7 @@ import secrets
 
 app = Flask(__name__)
 app.secret_key = secrets.token_urlsafe(16)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database/curio.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///curio.db"
 db = SQLAlchemy(app)
 
 
