@@ -265,7 +265,7 @@ def get_top():
     with app.app_context():
         top_posts = Post.query.order_by(Post.visibility.desc()).all()
         posts_serialized = [post.serialize() for post in top_posts]
-        return jsonify(posts_serialized)
+        return jsonify(str(posts_serialized))
 
 
 @app.route("/get_recent")
@@ -286,7 +286,7 @@ def logout():
 
 @app.route("/test")
 def test():
-    return "Hello World!"
+    return jsonify("Hello World!")
 
 
 def main():
