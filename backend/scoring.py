@@ -26,8 +26,10 @@ class StarHistory(db.Model):
     stars = db.Column(db.Integer, nullable=False)
 
 
-def add_to_history(user):
-    new_entry = StarHistory(user_id=user.id, stars=user.stars, timestamp=datetime.now())
+def add_to_history(user_id):
+    new_entry = StarHistory(
+        user_id=user_id, stars=User.query.get(user_id).stars, timestamp=datetime.now()
+    )
     db.session.add(new_entry)
     db.session.commit()
 
