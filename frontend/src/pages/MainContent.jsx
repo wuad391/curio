@@ -1,14 +1,14 @@
 import React from 'react';
-import NewPostButton from './NewPostButton';
-import SearchBar from './SearchBar';
-import PostList from './PostList';
+import NewPostButton from '../components/NewPostButton';
+import SearchBar from '../components/SearchBar';
+import PostList from '../components/PostList';
 // import { Sidebar } from 'lucide-react';
-import Sidebar from './Sidebar'
-import UserProfile from './UserProfile';
+import Sidebar from '../components/Sidebar'
+import UserProfile from '../components/UserProfile';
 
 function MainContent() {
   return (
-    <main className="flex flex-row gap-5 ml-5 max-md:flex-col max-md:ml-0">
+    <main className="flex flex-row gap-5 ml-5 max-md:flex-col bg-blue-50 max-md:px-5">
       {/* Sidebar Section */}
       <aside className="w-[20%] max-md:w-full pt-5">
         <div className="w-full">

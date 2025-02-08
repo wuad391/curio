@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Home, MessageSquare, Search, Star, Book, Plus, MessageCircle } from "lucide-react";
-import MainContent from './MainContent';
+import MainContent from './pages/MainContent';
 
 
 // side navigation bar
@@ -208,9 +208,7 @@ const App = () => {
 
     // trying Bill's stuff
     <main>
-      <MainContent>
-
-      </MainContent>
+      <MainContent />
     </main>
   );
 };
