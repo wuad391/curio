@@ -6,6 +6,7 @@ from flask import (
     url_for,
     flash,
     session,
+    jsonify,
 )
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, TextAreaField, SelectField
@@ -17,8 +18,6 @@ from sql_classes import app, db, User, Post, Comment
 from scoring import *
 from roles import UserRoles
 import json
-
-jsonify = json.dumps
 
 
 class RegistrationForm(FlaskForm):
@@ -188,7 +187,12 @@ def view_message(message_id):
 def rank_message(message_id):
     if "user" not in session:
         flash("Please log in first", "warning")
-        return jsonify
+        return jsonify(
+            {
+                "message": "Please log in first",
+                "status": "danger",
+            }
+        )
     message = Post.query.get_or_404(message_id)
     user = User.query.filter_by(username=session["user"]).first()
     with app.app_context():
