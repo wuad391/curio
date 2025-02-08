@@ -161,7 +161,7 @@ def post_message():
         print(new_message.serialize())
         db.session.add(new_message)
         db.session.commit()
-        
+
         return jsonify(
             {
                 "message": "Message posted successfully!",
@@ -317,6 +317,13 @@ def logout():
 @app.route("/test")
 def test():
     return jsonify("Hello World!")
+
+
+# recieve a post request with a json object containg strings
+@app.route("/r_test", methods=["POST"])
+def r_test():
+    data = request.get_json()
+    return jsonify(data)
 
 
 def main():
