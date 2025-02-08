@@ -27,7 +27,7 @@ class Post(db.Model):
     title = db.Column(db.String(150), nullable=False)
     pinned = db.Column(db.Boolean, default=False)
     instructor_endorsed = db.Column(db.Boolean, default=False)
-    avg_stars = db.Column(db.Float, default=0)
+    rank = db.Column(db.Float, default=0)
 
 
 class Comment(db.Model):
@@ -37,7 +37,7 @@ class Comment(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False)
     instructor_endorsed = db.Column(db.Boolean, default=False)
     accepted = db.Column(db.Boolean, default=False)
-    avg_stars = db.Column(db.Float, default=0)
+    rank = db.Column(db.Float, default=0)
 
 
 # InstructorClassAssociation_table = db.Table(

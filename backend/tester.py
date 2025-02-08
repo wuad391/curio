@@ -23,8 +23,8 @@ with app.app_context():
     db.session.add(user1)
     db.session.add(user2)
     db.session.commit()
-    post1 = Post(user_id=user1.id, content="post1 content")
-    post2 = Post(user_id=user2.id, content="post2 content")
+    post1 = Post(user_id=user1.id, content="post1 content", title="post1 title")
+    post2 = Post(user_id=user2.id, content="post2 content", title="post2 title")
     db.session.add(post1)
     db.session.add(post2)
     db.session.commit()
@@ -33,3 +33,15 @@ with app.app_context():
     instructor1 = User(
         username="instructor1", password="password", role=UserRoles.INSTRUCTOR
     )
+    # Add the instructor to the database
+    db.session.add(instructor1)
+    db.session.add(comment1)
+    db.session.add(comment2)
+    db.session.commit()
+
+    # Retrieve an existing comment (example: updating comment1)
+    comment_to_update = Comment.query.filter_by(id=comment1.id).first()
+    if comment_to_update:
+        comment_to_update.endorsed = True
+        db.session.commit()
+    print(db.session.query(Comment).all())
