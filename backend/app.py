@@ -13,7 +13,7 @@ from wtforms import StringField, PasswordField, SubmitField, TextAreaField, Sele
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 import secrets
-from sql_classes import app, db, User, Post, Comment
+from sql_classes import app, db, Student, Instructor, Message, Comment
 
 
 class RegistrationForm(FlaskForm):
@@ -68,6 +68,24 @@ with app.app_context():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
+        if form.role.data == "student":
+            user = Student.query.filter_by(username=form.username.data).first()
+            if user and user.password == form.password.data:
+                session["user"] = user.username
+                session["role"] = "student"
+                flash("Login successful!", "success")
+            else:
+                flash("Invalid username/password/role", "danger")
+        else:
+            user = Instructor.query.filter_by(username=form.username.data).first()
+            if user and user.password == form.password.data and user.role == form.role.data:
+                session["user"] = user.username
+                session["role"] = user.role
+                flash("Login successful!", "success")
+            else:
+                flash("Invalid username/password/role", "danger")
+        return redirect(url_for("message_board"))
+    return render_template("login.html", form=form)
         user = User.query.filter_by(username=form.username.data).first()
         if user and user.password == form.password.data and user.role == form.role.data:
             session["user"] = user.username
@@ -96,7 +114,10 @@ def login():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        new_user = User(
+        if form.role.data == "student":
+            new_user = Student(username=form.username.data, password=form.password.data)
+        else:
+            new_user = Instructor(
             username=form.username.data,
             password=form.password.data,
             role=form.role.data,
@@ -127,7 +148,7 @@ def message_board():
 
     form = MessageForm()
     if form.validate_on_submit():
-        new_message = Post(
+        new_message = Message(
             username=session["user"],
             user_role=session["role"],
             content=form.message.data,
@@ -136,7 +157,7 @@ def message_board():
         db.session.commit()
         return redirect(url_for("message_board"))
 
-    messages = Post.query.all()
+    messages = Message.query.all()
     return render_template(
         "message_board.html", username=session["user"], form=form, messages=messages
     )
@@ -147,7 +168,7 @@ def view_message(message_id):
     if "user" not in session:
         flash("Please log in first", "warning")
         return redirect(url_for("login"))
-    message = Post.query.get_or_404(message_id)
+    message = Message.query.get_or_404(message_id)
     comment_form = CommentForm()
 
     if comment_form.validate_on_submit():
