@@ -4,7 +4,7 @@ from wtforms import StringField, PasswordField, SubmitField, TextAreaField, Sele
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 import secrets
-from sql_classes import app, db, Student, Message, Comment
+from sql_classes import app, db, Student, Instructor, Message, Comment
 
 
 class RegistrationForm(FlaskForm):
@@ -73,7 +73,10 @@ def login():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        new_user = Student(username=form.username.data, password=form.password.data, role=form.role.data)
+        if form.role.data == "student":
+            new_user = Student(username=form.username.data, password=form.password.data)
+        else:
+            new_user = Instructor(username=form.username.data, password=form.password.data, role=form.role.data)
         db.session.add(new_user)
         db.session.commit()
         flash("Registration successful! Please log in.", "success")
