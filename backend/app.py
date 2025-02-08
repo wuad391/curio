@@ -13,7 +13,7 @@ from wtforms import StringField, PasswordField, SubmitField, TextAreaField, Sele
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 import secrets
-from sql_classes import app, db, Student, Instructor, Message, Comment
+from sql_classes import app, db, User, Post, Comment
 
 
 class RegistrationForm(FlaskForm):
@@ -68,40 +68,15 @@ with app.app_context():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        if form.role.data == "student":
-            user = Student.query.filter_by(username=form.username.data).first()
-            if user and user.password == form.password.data:
-                session["user"] = user.username
-                session["role"] = "student"
-                flash("Login successful!", "success")
-            else:
-                flash("Invalid username/password/role", "danger")
+        user = User.query.filter_by(username=form.username.data).first()
+        if user and user.password == form.password.data and user.role == form.role.data:
+            session["user"] = user.username
+            session["role"] = user.role
+            flash("Login successful!", "success")
+            return redirect(url_for("message_board"))
         else:
-            user = Instructor.query.filter_by(username=form.username.data).first()
-            if (
-                user
-                and user.password == form.password.data
-                and user.role == form.role.data
-            ):
-                session["user"] = user.username
-                session["role"] = user.role
-                flash("Login successful!", "success")
-            else:
-                flash("Invalid username/password/role", "danger")
-        return jsonify(
-            {
-                "message": "Login successful!",
-                "status": "success",
-                "redirect": url_for("message_board"),
-            }
-        )
-    return jsonify(
-        {
-            "message": "Invalid username/password/role",
-            "status": "danger",
-            "redirect": url_for("login"),
-        }
-    )
+            flash("Invalid username/password/role", "danger")
+    return render_template("login.html", form=form)
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -142,7 +117,7 @@ def message_board():
 
     form = MessageForm()
     if form.validate_on_submit():
-        new_message = Message(
+        new_message = Post(
             username=session["user"],
             user_role=session["role"],
             content=form.message.data,
@@ -151,10 +126,8 @@ def message_board():
         db.session.commit()
         return redirect(url_for("message_board"))
 
-    messages = Message.query.all()
-    return render_template(
-        "message_board.html", username=session["user"], form=form, messages=messages
-    )
+    messages = Post.query.all()
+    return jsonify({"messages": messages, "form": form})
 
 
 @app.route("/message/<int:message_id>", methods=["GET", "POST"])
@@ -162,7 +135,7 @@ def view_message(message_id):
     if "user" not in session:
         flash("Please log in first", "warning")
         return redirect(url_for("login"))
-    message = Message.query.get_or_404(message_id)
+    message = Post.query.get_or_404(message_id)
     comment_form = CommentForm()
 
     if comment_form.validate_on_submit():
@@ -195,7 +168,7 @@ def logout():
     session.pop("user", None)
     session.pop("role", None)
     flash("Logged out successfully!", "info")
-    return redirect(url_for("login"))
+    return jsonify(redirect(url_for("login")))
 
 
 if __name__ == "__main__":

@@ -7,7 +7,7 @@ import calmap
 from io import StringIO, BytesIO
 import base64
 from flask import render_template, jsonify, send_file
-from sql_classes import db, Message, app, Users
+from sql_classes import db, Post, app, Users
 
 IMAGE_FORMAT = "png"
 
