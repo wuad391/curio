@@ -13,7 +13,7 @@ from wtforms import StringField, PasswordField, SubmitField, TextAreaField, Sele
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 import secrets
-from sql_classes import app, db, User, Post, Comment
+from sql_classes import app, db, User, Message, Comment
 
 
 
@@ -90,7 +90,7 @@ def message_board():
 
     form = MessageForm()
     if form.validate_on_submit():
-        new_message = Post(
+        new_message = Message(
             username=session["user"],
             user_role=session["role"],
             content=form.message.data,
@@ -99,7 +99,7 @@ def message_board():
         db.session.commit()
         return redirect(url_for("message_board"))
 
-    messages = Post.query.all()
+    messages = Message.query.all()
     return render_template(
         "message_board.html", username=session["user"], form=form, messages=messages
     )
@@ -110,7 +110,7 @@ def view_message(message_id):
     if "user" not in session:
         flash("Please log in first", "warning")
         return redirect(url_for("login"))
-    message = Post.query.get_or_404(message_id)
+    message = Message.query.get_or_404(message_id)
     comment_form = CommentForm()
 
     if comment_form.validate_on_submit():

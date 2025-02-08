@@ -19,7 +19,7 @@ class User(db.Model):
     role = db.Column(db.String(50), nullable=False)
 
 
-class Post(db.Model):
+class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), nullable=False)
     user_role = db.Column(db.String(50), nullable=False)
@@ -32,4 +32,4 @@ class Comment(db.Model):
     user = db.Column(db.String(150), nullable=False)
     user_role = db.Column(db.String(50), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    message_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False)
+    message_id = db.Column(db.Integer, db.ForeignKey("message.id"), nullable=False)
