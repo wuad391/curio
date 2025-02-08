@@ -97,8 +97,14 @@ def create_post():
         return jsonify({}), 200
 
     # Otherwise, handle the POST request
-    data = request.get_json()
-    print("Received data:", data)
+    with app.app_context():
+        data = request.get_json()
+        new_post = Post(
+            content=data["class"],
+            title=data["title"],
+        )
+        db.session.add(new_post)
+        db.session.commit()
     # Process data (e.g., save to database)
     return jsonify({'message': 'Post created successfully!'}), 200
 
