@@ -71,10 +71,10 @@ function CreatePost() {
   }
   
   function handleSubmit() {
-    fetch ("http://127.0.0.1:5000/post_message", {
+    fetch ("http://127.0.0.1:5000/r_test", {
       method: "POST",
       mode: "no-cors",
-      body: JSON.stringify("THIS IS WORKING")
+      body: JSON.stringify({cool": "hot"})
     });
     console.log("I DID IT")
   }
