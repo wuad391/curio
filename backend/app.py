@@ -62,12 +62,6 @@ class CommentForm(FlaskForm):
     submit = SubmitField("Post Comment")
 
 
-@app.route("/", methods=["GET", "POST"])
-@app.route("/test", methods=["GET", "POST"])
-def pull_usernames():
-    return db.session.query(User).all()
-
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
