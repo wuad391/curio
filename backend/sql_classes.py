@@ -9,30 +9,26 @@ app.secret_key = secrets.token_urlsafe(16)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///messages.db"
 db = SQLAlchemy(app)
 
-MAX_STARS = 100
 
 # SQL Tables/Models:
 
-class Student(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(150), nullable=False)
-    stars = db.Column(db.Integer, default=0, max=MAX_STARS)
-
-
-class Instructor(db.Model):
+class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
     role = db.Column(db.String(50), nullable=False)
+    points = db.Column(db.Integer, default=0)
 
 
-class Message(db.Model):
+class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), nullable=False)
     user_role = db.Column(db.String(50), nullable=False)
+    # title = db.Column(db.String(150), nullable=False)
     content = db.Column(db.Text, nullable=False)
     comments = db.relationship("Comment", backref="message", lazy=True)
+    endorsed = db.Column(db.Boolean, default=False)
+    score = db.Column(db.Integer, default=0)
 
 
 class Comment(db.Model):
@@ -40,4 +36,6 @@ class Comment(db.Model):
     user = db.Column(db.String(150), nullable=False)
     user_role = db.Column(db.String(50), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    message_id = db.Column(db.Integer, db.ForeignKey("message.id"), nullable=False)
+    message_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False)
+    comment_id = db.Column(db.Integer, db.ForeignKey("comment.id"), nullable=True)
+    subcomments = db.relationship("Comment", backref="parent", remote_side=[id])
