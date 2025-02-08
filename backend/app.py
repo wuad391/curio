@@ -14,6 +14,7 @@ from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 import secrets
 from sql_classes import app, db, User, Post, Comment
+from roles import UserRoles
 
 
 class RegistrationForm(FlaskForm):
@@ -73,10 +74,21 @@ def login():
             session["user"] = user.username
             session["role"] = user.role
             flash("Login successful!", "success")
-            return redirect(url_for("message_board"))
+            return jsonify(
+                {
+                    "redirect": redirect(url_for("message_board")),
+                    "message": "Login successful!",
+                    "status": "success",
+                }
+            )
         else:
             flash("Invalid username/password/role", "danger")
-    return render_template("login.html", form=form)
+    return jsonify(
+        {
+            "message": "Invalid username/password/role",
+            "status": "danger",
+        }
+    )
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -156,6 +168,21 @@ def view_message(message_id):
             "comments": message.comments,
         }
     )
+
+
+@app.route("/endorse_comment/<int:comment_id>", methods=["POST"])
+def endorse_comment(comment_id):
+    if "user" not in session or session["role"] != UserRoles.INSTRUCTOR:
+        flash("Only instructors can endorse comments", "danger")
+        return redirect(url_for("message_board"))
+
+    comment = Comment.query.get_or_404(comment_id)
+    comment.instructor_endorsed = True
+    user = User.query.filter_by(username=comment.user).first()
+    user.stars += 3
+    db.session.commit()
+    flash("Comment endorsed successfully!", "success")
+    return jsonify(redirect(url_for("message_board")))
 
 
 @app.route("/logout")
