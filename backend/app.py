@@ -59,11 +59,6 @@ class CommentForm(FlaskForm):
     submit = SubmitField("Post Comment")
 
 
-# Ensure database tables are created before the first request
-with app.app_context():
-    db.create_all()
-
-
 @app.route("/", methods=["GET", "POST"])
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -95,7 +90,11 @@ def login():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        new_user = User(username=form.username.data, password=form.password.data, role=form.role.data)
+        new_user = User(
+            username=form.username.data,
+            password=form.password.data,
+            role=form.role.data,
+        )
         db.session.add(new_user)
         db.session.commit()
         flash("Registration successful! Please log in.", "success")
@@ -193,5 +192,12 @@ def logout():
     return jsonify(redirect(url_for("login")))
 
 
-if __name__ == "__main__":
+def main():
     app.run(debug=True)
+    # Ensure database tables are created before the first request
+    with app.app_context():
+        db.create_all()
+
+
+if __name__ == "__main__":
+    main()
