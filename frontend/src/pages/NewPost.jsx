@@ -9,7 +9,7 @@ import CreatePost from '../components/CreatePost'
 
 function NewPost() {
   return (
-    <main className="flex flex-row gap-5 ml-5 max-md:flex-col bg-blue-50 max-md:px-5">
+    <main className="flex flex-row gap-5 px-5 bg-blue-50 max-md:flex-col">
       {/* Sidebar Section */}
       <aside className="w-[20%] max-md:w-full pt-5">
         <div className="w-full">
