@@ -13,8 +13,10 @@ from scoring import (
     derived_comment_score,
 )
 
+# REMOVES OLD DATABASE
 # create example users, posts, and comments
 with app.app_context():
+    db.drop_all()
     db.create_all()
     user1 = User(username="user1", password="password", role=UserRoles.STUDENT)
     user2 = User(username="user2", password="password", role=UserRoles.STUDENT)
