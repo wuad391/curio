@@ -128,6 +128,8 @@ def message_board():
                 user_role=session["role"],
                 content=form.message.data,
             )
+            db.session.add(new_message)
+            db.session.commit()
             return jsonify(
                 {
                     "message": "Comment posted successfully!",
