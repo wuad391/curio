@@ -156,11 +156,13 @@ def view_message(message_id):
             }
         )
 
-    return {
-        "message": message,
-        "comment_form": comment_form,
-        "comments": message.comments,
-    }
+    return jsonify(
+        {
+            "message": message,
+            "comment_form": comment_form,
+            "comments": message.comments,
+        }
+    )
 
 
 @app.route("/logout")
