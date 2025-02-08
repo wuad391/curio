@@ -4,12 +4,12 @@ import UserPosts from './UserPosts';
 
 function UserProfile() {
   return (
-    <div className="flex flex-col ml-5 w-1/5 max-md:ml-0 max-md:w-full">
-      <div className="flex flex-col px-3.5 pt-3.5 pb-80 mx-auto w-full bg-white rounded-2xl shadow-[0px_1px_4px_rgba(0,0,0,0.25)] max-md:pb-24 max-md:mt-10">
+    <div className="flex flex-col w-full max-md:ml-0 max-md:w-full">
+      <div className="flex flex-col px-3.5 pt-5 pb-80 mx-auto w-full bg-white rounded-2xl shadow-[0px_1px_4px_rgba(0,0,0,0.25)] max-md:pb-24 max-md:mt-10">
         <div className="flex gap-5 justify-between w-full tracking-normal whitespace-nowrap">
           <div className="flex gap-3 items-start">
-            <div className="flex overflow-hidden flex-col self-start text-base font-medium text-center text-violet-900">
-              <div className="px-4 w-10 h-10 bg-purple-200 rounded-full fill-purple-200">
+            <div className="flex flex-col self-start text-base font-medium text-center text-violet-900">
+              <div className="flex items-center justify-center w-10 h-10 bg-purple-200 rounded-full">
                 A
               </div>
             </div>

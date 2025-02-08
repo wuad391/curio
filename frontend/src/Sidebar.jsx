@@ -7,7 +7,7 @@ const labelItems = ['Helpful', 'Can Answer', 'Awaiting Response', 'Trash'];
 
 function Sidebar() {
   return (
-    <div className="flex flex-col w-[27%] max-md:ml-0 max-md:w-full">
+    <div className="flex flex-col w-[100%] max-md:ml-0 max-md:w-full">
       <div className="flex overflow-hidden flex-col px-3 py-3 mx-auto w-full bg-white rounded-2xl min-h-[976px] shadow-[0px_1px_4px_rgba(0,0,0,0.25)] max-md:mt-10">
         <div className="flex flex-col w-full text-3xl font-medium tracking-normal leading-5 whitespace-nowrap text-zinc-700">
           <div className="flex overflow-hidden relative gap-2.5 items-start px-4 py-5 w-full rounded-[100px]">

@@ -128,10 +128,5 @@ def logout():
     return redirect(url_for("login"))
 
 
-@app.route("/test")
-def test():
-    return jsonify("SLDJFHLSDJFLKSDJFLKSDJFL")
-
-
 if __name__ == "__main__":
     app.run(debug=True)

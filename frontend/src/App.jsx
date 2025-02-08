@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Home, MessageSquare, Search, Star, Book, Plus, MessageCircle } from "lucide-react";
+import MainContent from './MainContent';
 
 
 // side navigation bar
@@ -173,34 +174,44 @@ const RecentPosts = () => {
 
 // MAIN APP
 const App = () => {
-  const [test, setTest] = useState("");
+  // const [test, setTest] = useState("");
 
-  useEffect(() =>{
-    const fetchData = async() => {
-      const res = await fetch("/test");
-      const data = await res.json();
-      if (data) {
-        setTest(data);
-      }
-    };
+  // useEffect(() =>{
+  //   const fetchData = async() => {
+  //     const res = await fetch("/test");
+  //     const data = await res.json();
+  //     if (data) {
+  //       setTest(data);
+  //     }
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
   
   return (
-    <div className="flex h-screen">
-      {/* Side Navigation */}
-      <SideNav />
-      <div>{ test }</div>
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col">
-        {/* Search Bar at the Top */}
-        <SearchBar />
 
-        {/* Recent Posts Section */}
-        <RecentPosts />
-      </div>
-    </div>
+    // chat gpt generated page
+    // <div className="flex h-screen">
+    //   {/* Side Navigation */}
+    //   <SideNav />
+    //   <div>{ test }</div>
+    //   {/* Main Content Area */}
+    //   <div className="flex-1 flex flex-col">
+    //     {/* Search Bar at the Top */}
+    //     <SearchBar />
+
+    //     {/* Recent Posts Section */}
+    //     <RecentPosts />
+    //   </div>
+    // </div>
+
+
+    // trying Bill's stuff
+    <main>
+      <MainContent>
+
+      </MainContent>
+    </main>
   );
 };
 
