@@ -120,61 +120,55 @@ def message_board():
     if "user" not in session:
         flash("Please log in first", "warning")
         return redirect(url_for("login"))
+    with app.app_context():
+        form = MessageForm()
+        if form.validate_on_submit():
+            new_message = Post(
+                username=session["user"],
+                user_role=session["role"],
+                content=form.message.data,
+            )
+            return jsonify(
+                {
+                    "message": "Comment posted successfully!",
+                    "form": form,
+                    "status": "success",
+                }
+            )
 
-    form = MessageForm()
-    if form.validate_on_submit():
-        new_message = Post(
-            username=session["user"],
-            user_role=session["role"],
-            content=form.message.data,
-        )
-        db.session.add(new_message)
-        db.session.commit()
-        return jsonify(
-            {
-                "message": "Comment posted successfully!",
-                "form": form,
-                "status": "success",
-            }
-        )
-
-    messages = Post.query.all()
-    return jsonify({"messages": messages, "form": form})
+        messages = Post.query.all()
+        return jsonify({"messages": messages, "form": form})
 
 
 @app.route("/message/<int:message_id>", methods=["GET", "POST"])
 def view_message(message_id):
-    if "user" not in session:
-        flash("Please log in first", "warning")
-        return redirect(url_for("login"))
-    message = Post.query.get_or_404(message_id)
-    comment_form = CommentForm()
-
-    if comment_form.validate_on_submit():
-        new_comment = Comment(
-            user=session["user"],
-            user_role=session["role"],
-            content=comment_form.comment.data,
-            message_id=message.id,
-        )
-        db.session.add(new_comment)
-        db.session.commit()
+    with app.app_context():
+        message = Post.query.get_or_404(message_id)
+        comment_form = CommentForm()
+        if comment_form.validate_on_submit():
+            new_comment = Comment(
+                user=session["user"],
+                user_role=session["role"],
+                content=comment_form.comment.data,
+                message_id=message.id,
+            )
+            db.session.add(new_comment)
+            db.session.commit()
+            return jsonify(
+                {
+                    "message": "Comment posted successfully!",
+                    "comment_form": comment_form,
+                    "comments": message.comments,
+                    "status": "success",
+                }
+            )
         return jsonify(
             {
-                "message": "Comment posted successfully!",
+                "message": message,
                 "comment_form": comment_form,
                 "comments": message.comments,
-                "status": "success",
             }
         )
-
-    return jsonify(
-        {
-            "message": message,
-            "comment_form": comment_form,
-            "comments": message.comments,
-        }
-    )
 
 
 @app.route("/rank_message/<int:message_id>", methods=["POST"])
