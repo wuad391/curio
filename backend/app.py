@@ -368,6 +368,7 @@ def main():
             comment_to_update.endorsed = True
 
         ranking1 = Ranking(user_id=user1.id, post_id=post1.id, ranking=3)
+        db.session.add(ranking1)
         post1.rank = 3
 
         db.session.commit()
