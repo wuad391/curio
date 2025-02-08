@@ -70,6 +70,7 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         if user and user.password == form.password.data and user.role == form.role.data:
             session["user"] = user.username
+            session["id"] = user.id
             session["role"] = user.role
             flash("Login successful!", "success")
             return jsonify(
@@ -87,28 +88,6 @@ def login():
             "status": "danger",
         }
     )
-
-@app.route('/posts', methods=['POST', 'OPTIONS'])
-def create_post():
-    # If this is an OPTIONS (preflight) request, return OK
-    if request.method == 'OPTIONS':
-        # flask-cors should automatically attach the correct headers,
-        # but you can also return a simple response:
-        return jsonify({}), 200
-
-    # Otherwise, handle the POST request
-    with app.app_context():
-        data = request.get_json()
-        new_post = Post(
-            content=data["class"],
-            title=data["title"],
-            user_id=124114,
-            timestamp=datetime.now(),
-        )
-        db.session.add(new_post)
-        db.session.commit()
-    # Process data (e.g., save to database)
-    return jsonify({'message': 'Post created successfully!'}), 200
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -310,6 +289,29 @@ def accept_comment(comment_id):
             "status": "success",
         }
     )
+
+
+@app.route('/posts', methods=['POST', 'OPTIONS'])
+def create_post():
+    # If this is an OPTIONS (preflight) request, return OK
+    if request.method == 'OPTIONS':
+        # flask-cors should automatically attach the correct headers,
+        # but you can also return a simple response:
+        return jsonify({}), 200
+
+    # Otherwise, handle the POST request
+    with app.app_context():
+        data = request.get_json()
+        new_post = Post(
+            content=data["class"],
+            title=data["title"],
+            user_id=session["id"],
+            timestamp=datetime.now(),
+        )
+        db.session.add(new_post)
+        db.session.commit()
+    # Process data (e.g., save to database)
+    return jsonify({'message': 'Post created successfully!'}), 200
 
 
 @app.route("/get_top")
