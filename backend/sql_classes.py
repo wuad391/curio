@@ -29,6 +29,7 @@ class Post(db.Model):
     instructor_endorsed = db.Column(db.Boolean, default=False)
     rank = db.Column(db.Float, default=0)
     visibility = db.Column(db.Float, default=0)
+    timestamp = db.Column(db.DateTime, nullable=False)
 
 
 class Comment(db.Model):
@@ -40,6 +41,7 @@ class Comment(db.Model):
     accepted = db.Column(db.Boolean, default=False)
     rank = db.Column(db.Float, default=0)
     visibility = db.Column(db.Float, default=0)
+    timestamp = db.Column(db.DateTime, nullable=False)
 
 
 # InstructorClassAssociation_table = db.Table(

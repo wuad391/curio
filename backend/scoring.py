@@ -36,15 +36,18 @@ def add_to_history(user_id):
     db.session.commit()
 
 
-def derived_post_score(post):
-    return sum(post.rankings) / len(post.rankings)
+def derived_post_rank(post_id):
+    rankings = [
+        ranking.star for ranking in Ranking.query.filter_by(post_id=post_id).all()
+    ]
+    return sum(rankings) / len(rankings)
 
 
-def derived_post_stars(post):
-    if post.instructor_endorsed:
+def derived_post_stars(post_id):
+    if po
         return 4
     else:
-        return max(0, post.score)
+        return max(0, post.rank)
 
 
 def post_visibility(post):

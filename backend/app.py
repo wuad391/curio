@@ -190,6 +190,18 @@ def endorse_comment(comment_id):
     return jsonify(redirect(url_for("message_board")))
 
 
+@app.route("/get_top")
+def get_top():
+    top_posts = Post.query.order_by(Post.visibility.desc()).all()
+    return jsonify(top_posts)
+
+
+@app.route("/get_recent")
+def get_recent():
+    recent_posts = Post.query.order_by(Post.timestamp.desc()).all()
+    return jsonify(recent_posts)
+
+
 @app.route("/logout")
 def logout():
     session.pop("user", None)
