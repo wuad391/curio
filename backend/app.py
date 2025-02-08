@@ -6,7 +6,6 @@ from flask import (
     url_for,
     flash,
     session,
-    jsonify,
 )
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, TextAreaField, SelectField
@@ -17,6 +16,9 @@ import secrets
 from sql_classes import app, db, User, Post, Comment
 from scoring import *
 from roles import UserRoles
+import json
+
+jsonify = json.dumps
 
 
 class RegistrationForm(FlaskForm):
@@ -301,8 +303,8 @@ def main():
         db.session.add(user)
         db.session.add(post)
         db.session.commit()
-        print({post: post.serialize() for post in db.session.query(Post).all()})
-    print(get_top())
+    print(get_top().json)
+
     app.run(debug=True)
 
 
