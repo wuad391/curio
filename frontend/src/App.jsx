@@ -19,35 +19,19 @@ const App = () => {
 
   //   fetchData();
   // }, []);
-  const [topPosts, settopPosts] = useState(null);
-
-// Using useEffect for single rendering
-useEffect(() => {
-    // Using fetch to fetch the api from 
-    // flask server it will be redirected to proxy
-    fetch("/get_top").then((res) =>
-        res.json().then((data) => {
-            // Setting a data from api
-            settopPosts(data);
-            console.log(topPosts);
-        })
-    );
-}, []);
-  return <div>jidfjondfkom</div>;
-  // return (
+  return (
 
     // trying Bill's stuff
-    // <main>
-      <p>{topPosts }</p>
-      {/* <BrowserRouter>
+    <main>
+       <BrowserRouter>
         <Routes>
           <Route index element={<Dashboard />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/newpost" element={<NewPost />} />
         </Routes>
-      </BrowserRouter> */}
-    {/* </main> */}
-  // );
+      </BrowserRouter> 
+    </main>
+  );
 };
 
 export default App
