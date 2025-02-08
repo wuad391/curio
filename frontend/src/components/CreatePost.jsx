@@ -86,7 +86,7 @@ function CreatePost() {
   return (
     <div className="flex flex-col px-5 pt-5 pb-16 mt-6 bg-white rounded-2xl shadow-[0px_1px_4px_rgba(0,0,0,0.25)] text-zinc-700 max-md:max-w-full">
       <h2 className="text-3xl font-bold mb-6">Create Post</h2>
-      <form onSubmit={handleSubmit()} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6">
         {/* Select Class Dropdown */}
         <div>
           <label htmlFor="class" className="block text-sm font-medium text-gray-700">

@@ -142,7 +142,7 @@ def message_board():
         return jsonify({"messages": messages, "form": form})
 
 
-@app.route("/post_message", methods=["POST"])
+@app.route("/post_message")
 def post_message():
     if "user" not in session:
         flash("Please log in first", "warning")
