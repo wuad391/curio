@@ -78,29 +78,23 @@ def login():
                 flash("Invalid username/password/role", "danger")
         else:
             user = Instructor.query.filter_by(username=form.username.data).first()
-            if user and user.password == form.password.data and user.role == form.role.data:
+            if (
+                user
+                and user.password == form.password.data
+                and user.role == form.role.data
+            ):
                 session["user"] = user.username
                 session["role"] = user.role
                 flash("Login successful!", "success")
             else:
                 flash("Invalid username/password/role", "danger")
-        return redirect(url_for("message_board"))
-    return render_template("login.html", form=form)
-        user = User.query.filter_by(username=form.username.data).first()
-        if user and user.password == form.password.data and user.role == form.role.data:
-            session["user"] = user.username
-            session["role"] = user.role
-            flash("Login successful!", "success")
-            return jsonify(
-                {
-                    "message": "Login successful!",
-                    "status": "success",
-                    "redirect": url_for("message_board"),
-                }
-            )
-        else:
-            flash("Invalid username/password/role", "danger")
-
+        return jsonify(
+            {
+                "message": "Login successful!",
+                "status": "success",
+                "redirect": url_for("message_board"),
+            }
+        )
     return jsonify(
         {
             "message": "Invalid username/password/role",
@@ -118,10 +112,10 @@ def register():
             new_user = Student(username=form.username.data, password=form.password.data)
         else:
             new_user = Instructor(
-            username=form.username.data,
-            password=form.password.data,
-            role=form.role.data,
-        )
+                username=form.username.data,
+                password=form.password.data,
+                role=form.role.data,
+            )
         db.session.add(new_user)
         db.session.commit()
         flash("Registration successful! Please log in.", "success")
