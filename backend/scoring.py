@@ -1,6 +1,7 @@
 from roles import UserRoles
 from sql_classes import User, Post, Comment, db
 from sqlalchemy.orm import validates
+from datetime import datetime
 
 
 class Ranking(db.Model):
@@ -16,6 +17,19 @@ class Ranking(db.Model):
         if ranking not in [-1, 0, 1, 2, 3]:
             raise ValueError("Invalid ranking")
         return ranking
+
+
+class StarHistory(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    timestamp = db.Column(db.DateTime, nullable=False)
+    stars = db.Column(db.Integer, nullable=False)
+
+
+def add_to_history(user):
+    new_entry = StarHistory(user_id=user.id, stars=user.stars, timestamp=datetime.now())
+    db.session.add(new_entry)
+    db.session.commit()
 
 
 def derived_post_score(post):
