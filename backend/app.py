@@ -1,4 +1,13 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    flash,
+    session,
+    jsonify,
+)
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, TextAreaField, SelectField
 from wtforms.validators import DataRequired
@@ -10,6 +19,7 @@ app = Flask(__name__)
 app.secret_key = secrets.token_urlsafe(16)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///messages.db"
 db = SQLAlchemy(app)
+
 
 
 class LoginForm(FlaskForm):
@@ -157,7 +167,7 @@ def logout():
 
 @app.route("/test")
 def test():
-    return {"message": "Hello, World!"}
+    return jsonify("SLDJFHLSDJFLKSDJFLKSDJFL")
 
 
 if __name__ == "__main__":
