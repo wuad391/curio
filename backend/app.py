@@ -323,6 +323,7 @@ def test():
 @app.route("/r_test", methods=["POST"])
 def r_test():
     data = request.get_json()
+    print(data)
     return jsonify(data)
 
 
