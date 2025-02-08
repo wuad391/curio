@@ -177,7 +177,7 @@ const App = () => {
 
   useEffect(() =>{
     const fetchData = async() => {
-      const res = await fetch("/");
+      const res = await fetch("/test");
       const data = await res.json();
       if (data) {
         setTest(data);
