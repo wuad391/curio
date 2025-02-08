@@ -3,6 +3,8 @@ from sql_classes import User, Post, Comment, db
 from sqlalchemy.orm import validates
 from datetime import datetime
 
+MAX_STARS = 100
+
 
 class Ranking(db.Model):
     # Ranking is for a post OR comment
