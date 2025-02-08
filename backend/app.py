@@ -15,6 +15,7 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import secrets
 from sql_classes import app, db, User, Post, Comment
+from scoring import *
 from roles import UserRoles
 
 
@@ -186,19 +187,88 @@ def view_message(message_id):
     )
 
 
+@app.route("/rank_message/<int:message_id>", methods=["POST"])
+def rank_message(message_id):
+    if "user" not in session:
+        flash("Please log in first", "warning")
+        return jsonify
+    message = Post.query.get_or_404(message_id)
+    user = User.query.filter_by(username=session["user"]).first()
+    with app.app_context():
+        old_ranking = Ranking.query.filter_by(
+            user_id=user.id,
+            post_id=message.id,
+        ).first()
+        if old_ranking:
+            db.session.delete(old_ranking)
+            db.session.commit()
+        new_ranking = Ranking(
+            user_id=user.id,
+            post_id=message.id,
+            ranking=request.form["ranking"],
+        )
+
+        db.session.add(new_ranking)
+        user.stars -= derived_comment_stars(message.id)
+        message.rank = derived_comment_rank(message.id)
+        user.stars += derived_comment_stars(message.id)
+        db.session.commit()
+
+    return jsonify(redirect(url_for("message_board")))
+
+
 @app.route("/endorse_comment/<int:comment_id>", methods=["POST"])
 def endorse_comment(comment_id):
     if "user" not in session or session["role"] != UserRoles.INSTRUCTOR:
         flash("Only instructors can endorse comments", "danger")
-        return redirect(url_for("message_board"))
+        return jsonify(
+            {"message": "Only instructors can endorse comments", "status": "danger"}
+        )
 
     comment = Comment.query.get_or_404(comment_id)
-    comment.instructor_endorsed = True
-    user = User.query.filter_by(username=comment.user).first()
-    user.stars += 3
-    db.session.commit()
-    flash("Comment endorsed successfully!", "success")
-    return jsonify(redirect(url_for("message_board")))
+    if comment.instructor_endorsed:
+        return jsonify({"message": "Comment already endorsed", "status": "info"})
+    with app.app_context():
+        user.stars -= derived_comment_stars(comment.id)
+        comment.instructor_endorsed = True
+        user = User.query.filter_by(username=comment.user).first()
+
+        user.stars += derived_comment_stars(comment.id)
+        db.session.commit()
+        flash("Comment endorsed successfully!", "success")
+    return jsonify(url_for("message_board"))
+
+
+@app.route("/accept_comment/<int:comment_id>", methods=["POST"])
+def accept_comment(comment_id):
+    user = User.query.filter_by(username=session["user"]).first()
+    comment = Comment.query.get_or_404(comment_id)
+    poster = Post.query.get(comment.post_id).user
+    if user.id != poster.id:
+        return jsonify(
+            {
+                "message": "Only the poster can accept comments",
+                "status": "danger",
+            }
+        )
+    if comment.accepted:
+        return jsonify(
+            {
+                "message": "Comment already accepted",
+                "status": "info",
+            }
+        )
+    with app.app_context():
+        user.stars -= derived_comment_stars(comment.id)
+        comment.accepted = True
+        user.stars += derived_comment_stars(comment.id)
+        db.session.commit()
+    return jsonify(
+        {
+            "message": "Comment accepted successfully!",
+            "status": "success",
+        }
+    )
 
 
 @app.route("/get_top")

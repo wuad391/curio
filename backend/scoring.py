@@ -44,7 +44,8 @@ def derived_post_rank(post_id):
 
 
 def derived_post_stars(post_id):
-    if po
+    post = Post.query.get(post_id)
+    if post.pinned:
         return 4
     else:
         return max(0, post.rank)
@@ -52,7 +53,7 @@ def derived_post_stars(post_id):
 
 def post_visibility(post):
     if post.pinned:
-        if post.user.role == UserRoles.INSTRUCTOR:
+        if User.query == UserRoles.INSTRUCTOR:
             return 4
         else:
             return 3
@@ -60,14 +61,17 @@ def post_visibility(post):
         return post.score
 
 
-def derived_comment_score(comment):
-    return sum(comment.rankings) / len(comment.rankings)
+def derived_comment_rank(comment_id):
+    rankings = [
+        ranking.star for ranking in Ranking.query.filter_by(comment_id=comment_id).all()
+    ]
+    return sum(rankings) / len(rankings)
 
 
 def derived_comment_stars(comment):
-    if comment.instructor_endorsed:
+    if comment.endorsed:
         return 4
     if comment.accepted:
         return 3
     else:
-        return max(0, comment.score)
+        return max(0, comment.rank)
