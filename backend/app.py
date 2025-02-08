@@ -327,6 +327,30 @@ def r_test():
     return jsonify(data)
 
 
+@app.route("/a_test")
+def a_test():
+    data = request.args.get("data")
+    print(data)
+    return jsonify(data)
+
+
+@app.route("/a_create/<string:item_name>")
+def a_create_item(item_name):
+    items = {
+        "user": User,
+        "post": Post,
+        "comment": Comment,
+    }
+    with app.app_context():
+        new_item = items[item_name](
+            **(request.args),
+            timestamp=datetime.now(),
+        )
+        db.session.add(new_item)
+        db.session.commit()
+        return jsonify(f"Tried adding item!{new_item.id=}")
+
+
 def main():
     with app.app_context():
         db.drop_all()

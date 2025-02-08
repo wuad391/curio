@@ -17,6 +17,7 @@ class User(db.Model):
     username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
     role = db.Column(db.Enum(UserRoles), nullable=False)
+    timestamp = db.Column(db.DateTime, nullable=False)
 
     def serialize(self):
         return {"username": self.username, "role": self.role}
