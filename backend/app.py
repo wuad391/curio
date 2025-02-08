@@ -83,14 +83,7 @@ def login():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        if form.role.data == "student":
-            new_user = Student(username=form.username.data, password=form.password.data)
-        else:
-            new_user = Instructor(
-                username=form.username.data,
-                password=form.password.data,
-                role=form.role.data,
-            )
+        new_user = User(username=form.username.data, password=form.password.data, role=form.role.data)
         db.session.add(new_user)
         db.session.commit()
         flash("Registration successful! Please log in.", "success")
