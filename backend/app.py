@@ -296,6 +296,11 @@ def logout():
     return jsonify(redirect(url_for("login")))
 
 
+@app.route("/test")
+def test():
+    return "Hello World!"
+
+
 def main():
     with app.app_context():
         db.drop_all()
