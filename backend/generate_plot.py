@@ -4,9 +4,10 @@ import pandas as pd
 import numpy as np
 from typing import List
 import calmap
-from io import StringIO
+from io import StringIO, BytesIO
 import base64
-from flask import render_template
+from flask import render_template, jsonify, send_file
+from sql_classes import db, Message, app, Users
 
 IMAGE_FORMAT = "png"
 
@@ -18,6 +19,13 @@ def plot_to_template(plot, name: str = "plot.html"):
     img.seek(0)
     plot_url = base64.b64encode(img.getvalue())
     return render_template(name, plot_url=plot_url)
+
+
+def plot_to_filelike(plot):
+    img = BytesIO()
+    plot.savefig(img, IMAGE_FORMAT)
+    img.seek(0)
+    return img
 
 
 def plot_user_activity_calmap(user, posts: pd.DataFrame, comments: pd.DataFrame):
@@ -40,7 +48,7 @@ def plot_user_activity_calmap(user, posts: pd.DataFrame, comments: pd.DataFrame)
         index=posts[posts["type"] == "answer"]["created_at"],
     )
     plot[3] = calmap.yearplot(answers_weighted["created_at"])
-    return plot_to_template(plot)
+    return plot_to_filelike(plot)
 
 
 if __name__ == "__main__":
