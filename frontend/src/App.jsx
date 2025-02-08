@@ -19,20 +19,21 @@ const App = () => {
 
   //   fetchData();
   // }, []);
-  const [topPosts, setTopPosts] = useState({})
-  useEffect(() => {
-      const fetchData = async () => {
-        const res = await fetch("/get_top");
-        const data = await res.json();
-        if (data) {
-          console.log(data)
-          setTopPosts(data);
-        }
-        console.log(data)
-      }
-    }, []);
-    console.log(topPosts.length)
-  return <div></div>;
+  const [topPosts, settopPosts] = useState(null);
+
+// Using useEffect for single rendering
+useEffect(() => {
+    // Using fetch to fetch the api from 
+    // flask server it will be redirected to proxy
+    fetch("/get_top").then((res) =>
+        res.json().then((data) => {
+            // Setting a data from api
+            settopPosts(data);
+            console.log(topPosts);
+        })
+    );
+}, []);
+  return <div>jidfjondfkom</div>;
   // return (
 
     // trying Bill's stuff
