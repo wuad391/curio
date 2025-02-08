@@ -301,8 +301,9 @@ def main():
         db.session.add(user)
         db.session.add(post)
         db.session.commit()
+        print({post: post.__dict__ for post in db.session.query(Post).all()})
     app.run(debug=True)
-    print({post: post.__dict__ for post in db.session.query(Post).all()})
+    
 
 
 if __name__ == "__main__":
