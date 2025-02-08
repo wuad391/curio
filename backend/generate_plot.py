@@ -8,6 +8,7 @@ from io import StringIO, BytesIO
 import base64
 from flask import render_template, jsonify, send_file
 from sql_classes import db, Post, app, Users
+from scoring import StarHistory
 
 IMAGE_FORMAT = "png"
 
@@ -51,20 +52,13 @@ def plot_user_activity_calmap(user, posts: pd.DataFrame, comments: pd.DataFrame)
     return plot_to_filelike(plot)
 
 
-if __name__ == "__main__":
+def plot_user_star_history(user_id):
+    history = StarHistory.query.filter_by(user_id=user_id).all()
+    plot = sns.lineplot(x="timestamp", y="stars", data=history)
+    return plot_to_filelike(plot)
 
-    all_days = pd.date_range("1/15/2014", "1/22/2014", freq="D")
-    days = np.random.choice(all_days, 5)
-    events = pd.Series(np.random.randn(len(days)), index=days)
-    calmap.calendarplot(
-        events,
-        monthticks=3,
-        daylabels="MTWTFSS",
-        dayticks=[0, 2, 4, 6],
-        cmap="YlGn",
-        fillcolor="grey",
-        linewidth=0,
-        fig_kws=dict(figsize=(8, 4)),
-    )
-    print(events)
-    plt.show()
+
+def plot_users_star_history(user_ids: List[int]):
+    history = pd.read_sql_table("star_history", db.engine)
+    plot = sns.lineplot(data=history, x="timestamp", y="stars")
+    return plot_to_filelike(plot)
