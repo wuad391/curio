@@ -13,6 +13,7 @@ from wtforms import StringField, PasswordField, SubmitField, TextAreaField, Sele
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from flask_cors import CORS
 import secrets
 from sql_classes import app, db, User, Post, Comment
 from scoring import *
@@ -86,6 +87,20 @@ def login():
             "status": "danger",
         }
     )
+
+@app.route('/posts', methods=['POST', 'OPTIONS'])
+def create_post():
+    # If this is an OPTIONS (preflight) request, return OK
+    if request.method == 'OPTIONS':
+        # flask-cors should automatically attach the correct headers,
+        # but you can also return a simple response:
+        return jsonify({}), 200
+
+    # Otherwise, handle the POST request
+    data = request.get_json()
+    print("Received data:", data)
+    # Process data (e.g., save to database)
+    return jsonify({'message': 'Post created successfully!'}), 200
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -325,6 +340,11 @@ def r_test():
     print(data)
     return jsonify(data)
 
+@app.route("/a_test")
+def a_test():
+    data = request.args.get("data")
+    print(data)
+    return jsonify(data)
 
 def main():
     with app.app_context():

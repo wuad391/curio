@@ -2,8 +2,10 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import secrets
 from roles import UserRoles
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 app.secret_key = secrets.token_urlsafe(16)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///curio.db"
 db = SQLAlchemy(app)
