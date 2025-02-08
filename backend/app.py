@@ -4,8 +4,18 @@ from wtforms import StringField, PasswordField, SubmitField, TextAreaField, Sele
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 import secrets
-from sql_classes import app, db, User, Message, Comment
+from sql_classes import app, db, User, Post, Comment
 
+
+class RegistrationForm(FlaskForm):
+    username = StringField("Username", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired()])
+    role = SelectField(
+        "Role",
+        choices=[("student", "Student"), ("instructor", "Instructor")],
+        validators=[DataRequired()],
+    )
+    submit = SubmitField("Register")
 
 
 class LoginForm(FlaskForm):
@@ -27,17 +37,6 @@ class MessageForm(FlaskForm):
 class CommentForm(FlaskForm):
     comment = TextAreaField("Comment", validators=[DataRequired()])
     submit = SubmitField("Post Comment")
-
-
-class RegistrationForm(FlaskForm):
-    username = StringField("Username", validators=[DataRequired()])
-    password = PasswordField("Password", validators=[DataRequired()])
-    role = SelectField(
-        "Role",
-        choices=[("student", "Student"), ("instructor", "Instructor")],
-        validators=[DataRequired()],
-    )
-    submit = SubmitField("Register")
 
 
 # Ensure database tables are created before the first request
@@ -81,7 +80,7 @@ def message_board():
 
     form = MessageForm()
     if form.validate_on_submit():
-        new_message = Message(
+        new_message = Post(
             username=session["user"],
             user_role=session["role"],
             content=form.message.data,
@@ -90,7 +89,7 @@ def message_board():
         db.session.commit()
         return redirect(url_for("message_board"))
 
-    messages = Message.query.all()
+    messages = Post.query.all()
     return render_template(
         "message_board.html", username=session["user"], form=form, messages=messages
     )
@@ -101,7 +100,7 @@ def view_message(message_id):
     if "user" not in session:
         flash("Please log in first", "warning")
         return redirect(url_for("login"))
-    message = Message.query.get_or_404(message_id)
+    message = Post.query.get_or_404(message_id)
     comment_form = CommentForm()
 
     if comment_form.validate_on_submit():
