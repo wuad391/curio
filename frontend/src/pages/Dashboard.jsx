@@ -6,7 +6,7 @@ import PostList from '../components/PostList';
 import Sidebar from '../components/Sidebar'
 import UserProfile from '../components/UserProfile';
 
-function MainContent() {
+function Dashboard() {
   return (
     <main className="flex flex-row gap-5 ml-5 max-md:flex-col bg-blue-50 max-md:px-5">
       {/* Sidebar Section */}
@@ -35,4 +35,4 @@ function MainContent() {
   );
 }
 
-export default MainContent;
+export default Dashboard;

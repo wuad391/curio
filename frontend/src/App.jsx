@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Home, MessageSquare, Search, Star, Book, Plus, MessageCircle } from "lucide-react";
-import MainContent from './pages/MainContent';
+import { BrowserRouter, Routes, Route} from 'react-router-dom';
+import Dashboard from './pages/Dashboard.jsx';
 
 
 // side navigation bar
@@ -208,7 +209,13 @@ const App = () => {
 
     // trying Bill's stuff
     <main>
-      <MainContent />
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/newpost" element={<NewPost />} />
+        </Routes>
+      </BrowserRouter>
     </main>
   );
 };
