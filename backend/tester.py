@@ -56,4 +56,4 @@ with app.app_context():
     if comment_to_update:
         comment_to_update.endorsed = True
         db.session.commit()
-    print(db.session.query(Comment).all())
+    print({post: post.__dict__ for post in db.session.query(Post).all()})
